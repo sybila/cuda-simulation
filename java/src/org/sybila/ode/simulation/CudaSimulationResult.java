@@ -3,19 +3,13 @@ package org.sybila.ode.simulation;
 import java.util.List;
 import org.sybila.ode.Trajectory;
 
-public class CudaSimulationResult
-{
+public class CudaSimulationResult {
 
 	private int dimension;
-
 	private int numberOfTrajectories;
-
 	private int[] lengths;
-
 	private int[] returnCodes;
-
 	private float[] times;
-
 	private float[] points;
 
 	public CudaSimulationResult(int numberOfTrajectories, int[] lengths, int[] returnCodes, float[] times, float[] points) {
@@ -43,21 +37,20 @@ public class CudaSimulationResult
 		if (points.length % numberOfTrajectories != 0) {
 			throw new IllegalArgumentException("The dimension can not be determied from the size of array [points] and number of trajectories.");
 		}
-		this.numberOfTrajectories	= numberOfTrajectories;
-		this.lengths				= lengths;
-		this.returnCodes			= returnCodes;
-		this.times					= times;
-		this.points					= points;
-		this.dimension				= points.length / numberOfTrajectories;
+		this.numberOfTrajectories = numberOfTrajectories;
+		this.lengths = lengths;
+		this.returnCodes = returnCodes;
+		this.times = times;
+		this.points = points;
+		this.dimension = points.length / numberOfTrajectories;
 	}
 
 	public Simulation apply(Simulation simulation) {
 		List<Trajectory> trajectories = simulation.getTrajectories();
-		for(Trajectory trajectory : trajectories) {
+		for (Trajectory trajectory : trajectories) {
 			// TODO
 		}
 		// TODO
 		return null;
 	}
-
 }

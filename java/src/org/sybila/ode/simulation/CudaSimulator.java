@@ -5,15 +5,11 @@ import jcuda.utils.KernelLauncher;
 import org.sybila.ode.Trajectory;
 import org.sybila.ode.system.EquationSystem;
 
-abstract public class CudaSimulator implements Simulator
-{
+abstract public class CudaSimulator implements Simulator {
 
 	private CudaSimulationWorkspace workspace;
-
 	private int maxNumberOfTrajectories;
-
 	private int maxBlockLength;
-
 	private EquationSystem system;
 
 	public CudaSimulator(EquationSystem system, int maxNumberOfTrajectories, int maxBlockLength) {
@@ -43,7 +39,7 @@ abstract public class CudaSimulator implements Simulator
 		List<Trajectory> trajectories = simulation.getTrajectories();
 		float[] seeds = new float[trajectories.size() * simulation.getDimension()];
 		int index = 0;
-		for(Trajectory trajectory : trajectories) {
+		for (Trajectory trajectory : trajectories) {
 			System.arraycopy(trajectory.getLastPoint().toArray(), 0, seeds, index, trajectory.getDimension());
 			index += trajectory.getDimension();
 		}
@@ -58,24 +54,23 @@ abstract public class CudaSimulator implements Simulator
 
 		// execute the kernel
 		launcher.call(
-			simulation.getTargetTime(),
-			getWorkspace().getDeviceSeeds(),
-			getWorkspace().getDeviceSteps(),
-			trajectories.size(),
-			getWorkspace().getMaxNumberOfTrajectories(),
-			simulation.getDimension(),
-			simulation.getMaxRelativeError(),
-			simulation.getMaxNumberOfIterations(),
-			getWorkspace().getMaxBlockLength(),
-			getWorkspace().getDeviceFunctionCoefficients(),
-			getWorkspace().getDeviceFunctionCoefficientIndexes(),
-			getWorkspace().getDeviceFunctionFactors(),
-			getWorkspace().getDeviceFunctionFactorIndexes(),
-			getWorkspace().getDeviceResultPoints(),
-			getWorkspace().getDeviceResultTimes(),
-			getWorkspace().getDeviceResultLengths(),
-			getWorkspace().getDeviceReturnCodes()
-		);
+				simulation.getTargetTime(),
+				getWorkspace().getDeviceSeeds(),
+				getWorkspace().getDeviceSteps(),
+				trajectories.size(),
+				getWorkspace().getMaxNumberOfTrajectories(),
+				simulation.getDimension(),
+				simulation.getMaxRelativeError(),
+				simulation.getMaxNumberOfIterations(),
+				getWorkspace().getMaxBlockLength(),
+				getWorkspace().getDeviceFunctionCoefficients(),
+				getWorkspace().getDeviceFunctionCoefficientIndexes(),
+				getWorkspace().getDeviceFunctionFactors(),
+				getWorkspace().getDeviceFunctionFactorIndexes(),
+				getWorkspace().getDeviceResultPoints(),
+				getWorkspace().getDeviceResultTimes(),
+				getWorkspace().getDeviceResultLengths(),
+				getWorkspace().getDeviceReturnCodes());
 
 		// return result
 		return getWorkspace().getResult(trajectories.size()).apply(simulation);
@@ -91,5 +86,4 @@ abstract public class CudaSimulator implements Simulator
 	abstract protected String getKernelFile();
 
 	abstract protected String getKernelName();
-
 }

@@ -1,10 +1,8 @@
 package org.sybila.ode;
 
-public class ArrayTrajectory extends AbstractTrajectory
-{
-	
+public class ArrayTrajectory extends AbstractTrajectory {
+
 	private float[] points;
-	
 	private float[] times;
 
 	public ArrayTrajectory(float[] points, float[] times, int dimension) {
@@ -15,8 +13,8 @@ public class ArrayTrajectory extends AbstractTrajectory
 		if (points.length / dimension != times.length) {
 			throw new IllegalArgumentException("The number of points doesn't correspond to the number of times.");
 		}
-		this.points		= points;
-		this.times		= times;
+		this.points = points;
+		this.times = times;
 	}
 
 	public Point getPoint(int index) {
@@ -25,7 +23,4 @@ public class ArrayTrajectory extends AbstractTrajectory
 		}
 		return new ArrayPoint(points, times[index], index * getDimension(), getDimension());
 	}
-
-
-
 }

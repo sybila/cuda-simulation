@@ -9,19 +9,13 @@ import org.sybila.ode.system.EquationSystem;
 import org.sybila.ode.system.Multiplication;
 import org.sybila.ode.system.Variable;
 
-public class CudaEquationSystem implements EquationSystem
-{
+public class CudaEquationSystem implements EquationSystem {
 
 	private EquationSystem system;
-
 	private boolean initialized = false;
-
 	private int[] coefficientIndexes;
-
 	private float[] coefficients;
-
 	private int[] factorIndexes;
-
 	private int[] factors;
 
 	public CudaEquationSystem(EquationSystem system) {
@@ -57,20 +51,20 @@ public class CudaEquationSystem implements EquationSystem
 		}
 		initialized = true;
 
-		coefficientIndexes				= new int[system.getEquations().size()+1];
-		List<Float> fCoefficients		= new ArrayList<Float>();
-		List<Integer> fFactorIndexes	= new ArrayList<Integer>();
-		List<Integer> fFactors			= new ArrayList<Integer>();
+		coefficientIndexes = new int[system.getEquations().size() + 1];
+		List<Float> fCoefficients = new ArrayList<Float>();
+		List<Integer> fFactorIndexes = new ArrayList<Integer>();
+		List<Integer> fFactors = new ArrayList<Integer>();
 
-		coefficientIndexes[0]		= 0;
-		int lastCoefficientIndex	= 0;
-		int lastFactorIndex			= 0;
+		coefficientIndexes[0] = 0;
+		int lastCoefficientIndex = 0;
+		int lastFactorIndex = 0;
 		for (Equation eq : system.getEquations()) {
 			for (Multiplication mult : eq.getRightSide().getAddends()) {
 				lastCoefficientIndex++;
 				fCoefficients.add(mult.getCoefficient());
 				fFactorIndexes.add(lastFactorIndex);
-				for(Variable var : mult.getVariables()) {
+				for (Variable var : mult.getVariables()) {
 					fFactors.add(var.getIndex());
 					lastFactorIndex++;
 				}
@@ -84,9 +78,9 @@ public class CudaEquationSystem implements EquationSystem
 		Float[] aC = new Float[fCoefficients.size()];
 		fCoefficients.toArray(aC);
 
-		factorIndexes	= ArrayUtils.toPrimitive(aFI);
-		factors			= ArrayUtils.toPrimitive(aF);
-		coefficients	= ArrayUtils.toPrimitive(aC);
+		factorIndexes = ArrayUtils.toPrimitive(aFI);
+		factors = ArrayUtils.toPrimitive(aF);
+		coefficients = ArrayUtils.toPrimitive(aC);
 	}
 
 	public Collection<Equation> getEquations() {
@@ -96,5 +90,4 @@ public class CudaEquationSystem implements EquationSystem
 	public int getDimension() {
 		return system.getDimension();
 	}
-
 }

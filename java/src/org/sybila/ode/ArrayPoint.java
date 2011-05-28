@@ -1,16 +1,11 @@
 package org.sybila.ode;
 
-public class ArrayPoint implements Point
-{
+public class ArrayPoint implements Point {
 
 	private float[] data;
-
 	private int dimension;
-
 	private int startIndex;
-
 	private float time;
-
 	private float[] dataInArray;
 
 	public ArrayPoint(float[] data, float time) {
@@ -58,5 +53,4 @@ public class ArrayPoint implements Point
 		}
 		return dataInArray;
 	}
-
 }

@@ -9,35 +9,21 @@ import jcuda.runtime.cudaError;
 import jcuda.runtime.cudaMemcpyKind;
 import org.sybila.ode.system.EquationSystem;
 
-public class CudaSimulationWorkspace
-{
+public class CudaSimulationWorkspace {
 
 	private boolean initialized = false;
-
 	private CudaEquationSystem system;
-
 	private int maxNumberOfTrajectories;
-
 	private int maxBlockLength;
-
 	private CUdeviceptr functionCoefficients;
-
 	private CUdeviceptr functionCoefficientIndexes;
-
 	private CUdeviceptr functionFactors;
-
 	private CUdeviceptr functionFactorIndexes;
-
 	private CUdeviceptr seeds;
-
 	private CUdeviceptr steps;
-
 	private CUdeviceptr resultPoints;
-
 	private CUdeviceptr resultTimes;
-
 	private CUdeviceptr resultLengths;
-
 	private CUdeviceptr returnCodes;
 
 	public CudaSimulationWorkspace(EquationSystem system, int maxNumberOfTrajectories, int maxBlockLength) {
@@ -47,9 +33,9 @@ public class CudaSimulationWorkspace
 		if (maxBlockLength <= 0) {
 			throw new IllegalArgumentException("The maximum block length has be a positive number.");
 		}
-		this.maxBlockLength				= maxBlockLength;
-		this.maxNumberOfTrajectories	= maxNumberOfTrajectories;
-		this.system						= new CudaEquationSystem(system);
+		this.maxBlockLength = maxBlockLength;
+		this.maxNumberOfTrajectories = maxNumberOfTrajectories;
+		this.system = new CudaEquationSystem(system);
 	}
 
 	public Pointer getDeviceResultLengths() {
@@ -114,15 +100,15 @@ public class CudaSimulationWorkspace
 		return maxBlockLength;
 	}
 
-	public CudaSimulationResult  getResult(int numberOfTrajectories) {
+	public CudaSimulationResult getResult(int numberOfTrajectories) {
 		if (numberOfTrajectories <= 0 || numberOfTrajectories > getMaxNumberOfTrajectories()) {
 			throw new IllegalArgumentException("The number of trajectories [" + numberOfTrajectories + "] is out of the range [1, " + getMaxNumberOfTrajectories() + "].");
 		}
 		initPointers();
-		int[] lengthsHost		= new int[numberOfTrajectories];
-		int[] returnCodesHost	= new int[numberOfTrajectories];
-		float[] timesHost		= new float[numberOfTrajectories * getMaxBlockLength()];
-		float[] pointsHost		= new float[numberOfTrajectories * system.getDimension() * getMaxBlockLength()];
+		int[] lengthsHost = new int[numberOfTrajectories];
+		int[] returnCodesHost = new int[numberOfTrajectories];
+		float[] timesHost = new float[numberOfTrajectories * getMaxBlockLength()];
+		float[] pointsHost = new float[numberOfTrajectories * system.getDimension() * getMaxBlockLength()];
 
 		copyDeviceToHost(Pointer.to(lengthsHost), resultLengths, numberOfTrajectories * Sizeof.INT);
 		copyDeviceToHost(Pointer.to(returnCodesHost), returnCodes, numberOfTrajectories * Sizeof.INT);
@@ -169,17 +155,17 @@ public class CudaSimulationWorkspace
 		}
 		initialized = true;
 
-		seeds			= new CUdeviceptr();
-		steps			= new CUdeviceptr();
-		resultLengths	= new CUdeviceptr();
-		resultPoints	= new CUdeviceptr();
-		resultTimes		= new CUdeviceptr();
-		returnCodes		= new CUdeviceptr();
+		seeds = new CUdeviceptr();
+		steps = new CUdeviceptr();
+		resultLengths = new CUdeviceptr();
+		resultPoints = new CUdeviceptr();
+		resultTimes = new CUdeviceptr();
+		returnCodes = new CUdeviceptr();
 
-		functionCoefficientIndexes	= new CUdeviceptr();
-		functionCoefficients		= new CUdeviceptr();
-		functionFactorIndexes		= new CUdeviceptr();
-		functionFactors				= new CUdeviceptr();
+		functionCoefficientIndexes = new CUdeviceptr();
+		functionCoefficients = new CUdeviceptr();
+		functionFactorIndexes = new CUdeviceptr();
+		functionFactors = new CUdeviceptr();
 
 		JCuda.cudaMalloc(seeds, maxNumberOfTrajectories * system.getDimension() * Sizeof.FLOAT);
 		JCuda.cudaMalloc(steps, system.getDimension() * Sizeof.FLOAT);
@@ -214,5 +200,4 @@ public class CudaSimulationWorkspace
 			throw new CudaException(JCuda.cudaGetErrorString(error));
 		}
 	}
-
 }

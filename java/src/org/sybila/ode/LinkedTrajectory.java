@@ -1,12 +1,9 @@
 package org.sybila.ode;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinkedTrajectory extends AbstractTrajectory
-{
+public class LinkedTrajectory extends AbstractTrajectory {
 
 	private List<Trajectory> trajectories = new ArrayList<Trajectory>();
 
@@ -45,7 +42,7 @@ public class LinkedTrajectory extends AbstractTrajectory
 		}
 		// TODO: binary halfing
 		int length = 0;
-		for(Trajectory t : trajectories) {
+		for (Trajectory t : trajectories) {
 			if (index < length + t.getLength()) {
 				index -= length;
 				return t.getPoint(index);
@@ -54,6 +51,4 @@ public class LinkedTrajectory extends AbstractTrajectory
 		}
 		return null;
 	}
-
-
 }

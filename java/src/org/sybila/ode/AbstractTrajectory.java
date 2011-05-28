@@ -1,10 +1,8 @@
 package org.sybila.ode;
 
-abstract public class AbstractTrajectory implements Trajectory
-{
+abstract public class AbstractTrajectory implements Trajectory {
 
 	private int dimension;
-
 	private int length;
 
 	public AbstractTrajectory(int dimension, int length) {
@@ -14,8 +12,8 @@ abstract public class AbstractTrajectory implements Trajectory
 		if (length <= 0) {
 			throw new IllegalArgumentException("The length has to be a positive number.");
 		}
-		this.dimension	= dimension;
-		this.length		= length;
+		this.dimension = dimension;
+		this.length = length;
 	}
 
 	public int getDimension() {
@@ -40,5 +38,4 @@ abstract public class AbstractTrajectory implements Trajectory
 		}
 		this.length = length;
 	}
-
 }
