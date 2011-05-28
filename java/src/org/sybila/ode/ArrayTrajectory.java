@@ -23,4 +23,5 @@ public class ArrayTrajectory extends AbstractTrajectory {
 		}
 		return new ArrayPoint(points, times[index], index * getDimension(), getDimension());
 	}
+
 }

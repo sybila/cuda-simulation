@@ -1,5 +1,8 @@
 package org.sybila.ode;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 abstract public class AbstractTrajectory implements Trajectory {
 
 	private int dimension;
@@ -37,5 +40,37 @@ abstract public class AbstractTrajectory implements Trajectory {
 			throw new IllegalArgumentException("The length has to be a positive number.");
 		}
 		this.length = length;
+	}
+
+	public Iterator<Point> iterator() {
+		return new TrajectoryIterator(this);
+	}
+
+	private class TrajectoryIterator implements Iterator<Point> {
+
+		private Trajectory trajectory;
+		private int index = 0;
+
+		public TrajectoryIterator(Trajectory trajectory) {
+			if (trajectory == null) {
+				throw new IllegalArgumentException("The parameter [trajectory] is NULL.");
+			}
+			this.trajectory = trajectory;
+		}
+
+		public boolean hasNext() {
+			return index < trajectory.getLength();
+		}
+
+		public Point next() {
+			if (index == trajectory.getLength()) {
+				throw new NoSuchElementException();
+			}
+			return trajectory.getPoint(index++);
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 	}
 }

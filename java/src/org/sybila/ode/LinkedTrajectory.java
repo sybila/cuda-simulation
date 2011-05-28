@@ -1,6 +1,7 @@
 package org.sybila.ode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class LinkedTrajectory extends AbstractTrajectory {
@@ -40,7 +41,6 @@ public class LinkedTrajectory extends AbstractTrajectory {
 		if (index >= getLength()) {
 			throw new IllegalArgumentException("The index has to be lower than trajectory length.");
 		}
-		// TODO: binary halfing
 		int length = 0;
 		for (Trajectory t : trajectories) {
 			if (index < length + t.getLength()) {
@@ -50,5 +50,47 @@ public class LinkedTrajectory extends AbstractTrajectory {
 			length += t.getLength();
 		}
 		return null;
+	}
+
+	@Override
+	public Iterator<Point> iterator() {
+		return new LinkedTrajectoryIterator(this);
+	}
+
+	private class LinkedTrajectoryIterator implements Iterator<Point> {
+
+		private LinkedTrajectory trajectory;
+		private int trajectoryIndex = 0;
+		private Iterator<Point> iterator;
+
+		public LinkedTrajectoryIterator(LinkedTrajectory trajectory) {
+			if (trajectory == null) {
+				throw new IllegalArgumentException("The parameter [trajectory] is NULL.");
+			}
+			this.trajectory = trajectory;
+			this.iterator = trajectories.get(0).iterator();
+		}
+
+		public boolean hasNext() {
+			return iterator != null && iterator.hasNext();
+		}
+
+		public Point next() {
+			Point point = iterator.next();
+			if (!iterator.hasNext()) {
+				trajectoryIndex++;
+				if (trajectoryIndex < trajectory.trajectories.size()) {
+					iterator = trajectory.trajectories.get(trajectoryIndex).iterator();
+				}
+				else {
+					iterator = null;
+				}
+			}
+			return point;
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 	}
 }

@@ -5,7 +5,7 @@ package org.sybila.ode;
  *
  * @author Jan Papousek
  */
-public interface Trajectory
+public interface Trajectory extends Iterable<Point>
 {
 
 	/**
