@@ -19,6 +19,7 @@ public class CudaSimulationWorkspace {
 	private CUdeviceptr functionCoefficientIndexes;
 	private CUdeviceptr functionFactors;
 	private CUdeviceptr functionFactorIndexes;
+	private CUdeviceptr times;
 	private CUdeviceptr seeds;
 	private CUdeviceptr steps;
 	private CUdeviceptr resultPoints;
@@ -118,12 +119,18 @@ public class CudaSimulationWorkspace {
 		return new CudaSimulationResult(numberOfTrajectories, lengthsHost, returnCodesHost, timesHost, pointsHost);
 	}
 
-	public void bindNewComputation(float[] seeds, float[] steps) {
+	public void bindNewComputation(float[] seeds, float[] times, float[] steps) {
 		if (seeds == null) {
 			throw new IllegalArgumentException("The parameter [seeds] is NULL.");
 		}
 		if (seeds.length > getEquationSystem().getDimension() * maxNumberOfTrajectories) {
 			throw new IllegalArgumentException("The size of array [seeds] doesn't correspond to the product of number of trajectories and number of dimensions.");
+		}
+		if (times == null) {
+			throw new IllegalArgumentException("The parameter [null] is NULL.");
+		}
+		if (times.length * system.getDimension() != seeds.length) {
+			throw new IllegalArgumentException("The size of array [times] doesn't correspond to the size of array [seeds].");
 		}
 		if (steps == null) {
 			throw new IllegalArgumentException("The parameter [steps] is NULL.");
@@ -134,6 +141,7 @@ public class CudaSimulationWorkspace {
 		initPointers();
 		copyHostToDevice(this.seeds, Pointer.to(seeds), seeds.length * Sizeof.FLOAT);
 		copyHostToDevice(this.steps, Pointer.to(steps), steps.length * Sizeof.FLOAT);
+		copyHostToDevice(this.times, Pointer.to(times), times.length * Sizeof.FLOAT);
 	}
 
 	public void destroy() {
@@ -157,6 +165,7 @@ public class CudaSimulationWorkspace {
 
 		seeds = new CUdeviceptr();
 		steps = new CUdeviceptr();
+		times = new CUdeviceptr();
 		resultLengths = new CUdeviceptr();
 		resultPoints = new CUdeviceptr();
 		resultTimes = new CUdeviceptr();
@@ -169,6 +178,7 @@ public class CudaSimulationWorkspace {
 
 		JCuda.cudaMalloc(seeds, maxNumberOfTrajectories * system.getDimension() * Sizeof.FLOAT);
 		JCuda.cudaMalloc(steps, system.getDimension() * Sizeof.FLOAT);
+		JCuda.cudaMalloc(times, maxNumberOfTrajectories);
 		JCuda.cudaMalloc(resultPoints, (maxBlockLength + 1) * maxNumberOfTrajectories * system.getDimension() * Sizeof.FLOAT);
 		JCuda.cudaMalloc(resultTimes, maxNumberOfTrajectories * maxBlockLength * Sizeof.FLOAT);
 		JCuda.cudaMalloc(returnCodes, maxNumberOfTrajectories * Sizeof.INT);

@@ -2,6 +2,7 @@ package org.sybila.ode.simulation;
 
 import java.util.List;
 import jcuda.utils.KernelLauncher;
+import org.sybila.ode.Point;
 import org.sybila.ode.Trajectory;
 import org.sybila.ode.system.EquationSystem;
 
@@ -38,12 +39,14 @@ abstract public class CudaSimulator implements Simulator {
 		// prepare data
 		List<Trajectory> trajectories = simulation.getTrajectories();
 		float[] seeds = new float[trajectories.size() * simulation.getDimension()];
+		float[] times = new float[trajectories.size()];
 		int index = 0;
 		for (Trajectory trajectory : trajectories) {
 			System.arraycopy(trajectory.getLastPoint().toArray(), 0, seeds, index, trajectory.getDimension());
+			times[index] = trajectory.getLastPoint().getTime();
 			index += trajectory.getDimension();
 		}
-		getWorkspace().bindNewComputation(seeds, simulation.getSteps());
+		getWorkspace().bindNewComputation(seeds, times, simulation.getSteps());
 
 		// prepare computation
 		KernelLauncher launcher = KernelLauncher.load(getKernelFile(), getKernelName());
@@ -74,6 +77,10 @@ abstract public class CudaSimulator implements Simulator {
 
 		// return result
 		return getWorkspace().getResult(trajectories.size()).apply(simulation);
+	}
+
+	public Simulation createNewSimulation(List<Point> seeds, float targetTime, float[] steps, float maxRelError) {
+		throw new UnsupportedOperationException();
 	}
 
 	protected final CudaSimulationWorkspace getWorkspace() {

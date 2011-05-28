@@ -1,5 +1,8 @@
 package org.sybila.ode.simulation;
 
+import java.util.List;
+import org.sybila.ode.Point;
+
 /**
  * The classes implementing this interface generate trajectories.
  * 
@@ -13,6 +16,8 @@ public interface Simulator
 	 * @param simulation 
 	 */
 	public Simulation simulate(Simulation simulation);
+
+	public Simulation createNewSimulation(List<Point> seeds, float targetTime, float[] steps, float maxRelError);
 
 	public void destroy();
 
