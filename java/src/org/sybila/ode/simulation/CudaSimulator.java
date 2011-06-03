@@ -2,11 +2,10 @@ package org.sybila.ode.simulation;
 
 import java.util.List;
 import jcuda.utils.KernelLauncher;
-import org.sybila.ode.Point;
 import org.sybila.ode.Trajectory;
 import org.sybila.ode.system.EquationSystem;
 
-abstract public class CudaSimulator implements Simulator {
+abstract public class CudaSimulator<S extends Simulation> implements Simulator<S> {
 
 	private CudaSimulationWorkspace workspace;
 	private int maxNumberOfTrajectories;
@@ -27,12 +26,12 @@ abstract public class CudaSimulator implements Simulator {
 		this.maxNumberOfTrajectories = maxNumberOfTrajectories;
 		this.maxBlockLength = maxBlockLength;
 	}
-
+	
 	public void destroy() {
 		getWorkspace().destroy();
 	}
 
-	public Simulation simulate(Simulation simulation) {
+	public SimulationResult simulate(S simulation) {
 		if (simulation.getDimension() != system.getDimension()) {
 			throw new IllegalArgumentException("The dimension of the simulation doesn't correspond to the dimension of the equation system.");
 		}
@@ -56,41 +55,21 @@ abstract public class CudaSimulator implements Simulator {
 		launcher.setBlockSize(blockDim, simulation.getDimension(), 1);
 
 		// execute the kernel
-		launcher.call(
-				simulation.getTargetTime(),
-				getWorkspace().getDeviceSeeds(),
-				getWorkspace().getDeviceSteps(),
-				trajectories.size(),
-				getWorkspace().getMaxNumberOfTrajectories(),
-				simulation.getDimension(),
-				simulation.getMaxRelativeError(),
-				simulation.getMaxNumberOfIterations(),
-				getWorkspace().getMaxBlockLength(),
-				getWorkspace().getDeviceFunctionCoefficients(),
-				getWorkspace().getDeviceFunctionCoefficientIndexes(),
-				getWorkspace().getDeviceFunctionFactors(),
-				getWorkspace().getDeviceFunctionFactorIndexes(),
-				getWorkspace().getDeviceResultPoints(),
-				getWorkspace().getDeviceResultTimes(),
-				getWorkspace().getDeviceResultLengths(),
-				getWorkspace().getDeviceReturnCodes());
+		callLauncher(launcher, simulation, getWorkspace());
 
-		// return result
-		return getWorkspace().getResult(trajectories.size()).apply(simulation);
+		return getWorkspace().getResult(trajectories.size());
 	}
 
-	public Simulation createNewSimulation(List<Point> seeds, float targetTime, float[] steps, float maxRelError) {
-		throw new UnsupportedOperationException();
-	}
-
-	protected final CudaSimulationWorkspace getWorkspace() {
+	private CudaSimulationWorkspace getWorkspace() {
 		if (workspace == null) {
 			workspace = new CudaSimulationWorkspace(system, maxNumberOfTrajectories, maxBlockLength);
 		}
 		return workspace;
 	}
-
+	
 	abstract protected String getKernelFile();
 
 	abstract protected String getKernelName();
+
+	abstract protected void callLauncher(KernelLauncher launcher, S simulation, CudaSimulationWorkspace workspace);
 }

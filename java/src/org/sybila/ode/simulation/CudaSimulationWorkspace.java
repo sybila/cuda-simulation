@@ -84,6 +84,11 @@ public class CudaSimulationWorkspace {
 		return seeds;
 	}
 
+	public Pointer getDeviceTimes() {
+		initPointers();
+		return times;
+	}
+
 	public Pointer getDeviceSteps() {
 		initPointers();
 		return steps;

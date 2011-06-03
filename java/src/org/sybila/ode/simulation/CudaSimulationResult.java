@@ -3,10 +3,10 @@ package org.sybila.ode.simulation;
 import java.util.ArrayList;
 import java.util.List;
 import org.sybila.ode.ArrayTrajectory;
-import org.sybila.ode.LinkedTrajectory;
 import org.sybila.ode.Trajectory;
 
-public class CudaSimulationResult {
+public class CudaSimulationResult implements SimulationResult
+{
 
 	private int dimension;
 	private int numberOfTrajectories;
@@ -15,6 +15,9 @@ public class CudaSimulationResult {
 	private float[] times;
 	private float[] points;
 	private int maxBlockLength;
+
+	private List<Trajectory> trajectories;
+	private List<SimulationStatus> statuses;
 
 	public CudaSimulationResult(int numberOfTrajectories, int[] lengths, int[] returnCodes, float[] times, float[] points) {
 		if (numberOfTrajectories <= 0) {
@@ -53,37 +56,38 @@ public class CudaSimulationResult {
 		this.dimension = points.length / (numberOfTrajectories * this.maxBlockLength);
 	}
 
-	public Simulation apply(Simulation simulation) {
-		List<Trajectory> trajectories = simulation.getTrajectories();
-		List<Trajectory> newTrajectories = new ArrayList<Trajectory>(numberOfTrajectories);
-		if (trajectories.size() != numberOfTrajectories) {
-			throw new IllegalArgumentException("The number of the given trajectories doesn't correspond to the number of simulated trajectories.");
+	public List<Trajectory> getTrajectories() {
+		if (trajectories == null) {
+			trajectories = createTrajectories();
 		}
+		return trajectories;
+	}
+
+	public List<SimulationStatus> getStatuses() {
+		if (statuses == null) {
+			statuses = createStatuses();
+		}
+		return statuses;
+	}
+
+	private List<SimulationStatus> createStatuses() {
+		List<SimulationStatus> result = new ArrayList<SimulationStatus>(returnCodes.length);
+		for(int i=0; i<returnCodes.length; i++) {
+			result.add(SimulationStatus.fromInt(returnCodes[i]));
+		}
+		return result;
+	}
+
+	private List<Trajectory> createTrajectories() {
+		List<Trajectory> result = new ArrayList<Trajectory>(numberOfTrajectories);
 		for(int i=0; i<numberOfTrajectories; i++) {
-			Trajectory oldTrajectory = trajectories.get(i);
-			Trajectory newTrajectory = createTrajectory(i);
-			if (oldTrajectory instanceof LinkedTrajectory) {
-				((LinkedTrajectory) oldTrajectory).append(newTrajectory);
-				newTrajectories.add(oldTrajectory);
-			}
-			else {
-				LinkedTrajectory auxTrajectory = new LinkedTrajectory(oldTrajectory);
-				auxTrajectory.append(newTrajectory);
-				newTrajectories.add(oldTrajectory);
-			}
+			float[] trajectoryPoints = new float[lengths[i] * dimension];
+			System.arraycopy(points, dimension * maxBlockLength * i, trajectoryPoints, 0, dimension * lengths[i]);
+			float[] trajectoryTimes = new float[lengths[i]];
+			System.arraycopy(times, maxBlockLength * i, trajectoryTimes, 0, lengths[i]);
+			result.add(new ArrayTrajectory(trajectoryPoints, trajectoryTimes, dimension));
 		}
-		throw new UnsupportedOperationException();
+		return result;
 	}
 
-	private SimulationStatus createStatus(int index) {
-		return SimulationStatus.fromInt(returnCodes[index]);
-	}
-
-	private Trajectory createTrajectory(int index) {
-		float[] trajectoryPoints = new float[lengths[index] * dimension];
-		System.arraycopy(points, dimension * maxBlockLength * index, trajectoryPoints, 0, dimension * lengths[index]);
-		float[] trajectoryTimes = new float[lengths[index]];
-		System.arraycopy(times, maxBlockLength * index, trajectoryTimes, 0, lengths[index]);
-		return new ArrayTrajectory(points, times, dimension);
-	}
 }

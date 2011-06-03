@@ -6,18 +6,20 @@ import org.sybila.ode.Trajectory;
 public interface Simulation
 {
 
-	List<SimulationStatus> getStatuses();
-
 	List<Trajectory> getTrajectories();
-
-	float getMaxRelativeError();
+	
+	void setTrajectories(List<Trajectory> trajectories);
 
 	float[] getSteps();
 
 	int getDimension();
 
+	float getTimeStep();
+
 	float getTargetTime();
 
 	int getMaxNumberOfIterations();
+
+	SimulationResult simulate();
 
 }
