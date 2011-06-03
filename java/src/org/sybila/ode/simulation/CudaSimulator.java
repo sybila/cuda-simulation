@@ -31,6 +31,18 @@ abstract public class CudaSimulator<S extends Simulation> implements Simulator<S
 		getWorkspace().destroy();
 	}
 
+	public EquationSystem getEquationSystem() {
+		return system;
+	}
+
+	public int getMaxBlockLength() {
+		return maxBlockLength;
+	}
+
+	public int getMaxNumberOfTrajectories() {
+		return maxNumberOfTrajectories;
+	}
+
 	public SimulationResult simulate(S simulation) {
 		if (simulation.getDimension() != system.getDimension()) {
 			throw new IllegalArgumentException("The dimension of the simulation doesn't correspond to the dimension of the equation system.");
