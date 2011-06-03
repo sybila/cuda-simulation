@@ -11,8 +11,8 @@ public class CudaRkf45Simulator extends CudaSimulator<AdaptiveStepSimulation>
 		super(system, maxNumberOfTrajectories, maxBlockLength);
 	}
 
-	public AdaptiveStepSimulation createSimulation(int dimension, float timeStep, float targetTime, float maxAbsoluteError, float maxRelativeError, float[] steps) {
-		return new SimpleAdaptiveStepSimulation(this, dimension, timeStep, targetTime, maxAbsoluteError, maxRelativeError, steps);
+	public AdaptiveStepSimulation createSimulation(int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float maxAbsoluteError, float maxRelativeError, float[] steps) {
+		return new SimpleAdaptiveStepSimulation(this, dimension, timeStep, targetTime, minBounds, maxBounds, maxAbsoluteError, maxRelativeError, steps);
 	}
 
 	@Override

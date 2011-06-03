@@ -11,20 +11,20 @@ public class SimpleAdaptiveStepSimulation extends AbstractSimulation implements 
 
 	private Simulator<AdaptiveStepSimulation> simulator;
 
-	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float maxAbsoluteError, float maxRelativeError) {
-		this(simulator, dimension, timeStep, targetTime, maxAbsoluteError, maxRelativeError, new float[dimension], DEFAULT_MAX_NUMBER_OF_ITERATIONS);
+	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float maxAbsoluteError, float maxRelativeError) {
+		this(simulator, dimension, timeStep, targetTime, minBounds, maxBounds, maxAbsoluteError, maxRelativeError, new float[dimension], DEFAULT_MAX_NUMBER_OF_ITERATIONS);
 	}
 
-	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float maxAbsoluteError, float maxRelativeError, float[] steps) {
-		this(simulator, dimension, timeStep, targetTime, maxAbsoluteError, maxRelativeError, steps, DEFAULT_MAX_NUMBER_OF_ITERATIONS);
+	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float maxAbsoluteError, float maxRelativeError, float[] steps) {
+		this(simulator, dimension, timeStep, targetTime, minBounds, maxBounds, maxAbsoluteError, maxRelativeError, steps, DEFAULT_MAX_NUMBER_OF_ITERATIONS);
 	}
 
-	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float maxAbsoluteError, float maxRelativeError, int maxNumberOfIterations) {
-		this(simulator, dimension, timeStep, targetTime, maxAbsoluteError, maxRelativeError, new float[dimension], maxNumberOfIterations);
+	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float maxAbsoluteError, float maxRelativeError, int maxNumberOfIterations) {
+		this(simulator, dimension, timeStep, targetTime, minBounds, maxBounds, maxAbsoluteError, maxRelativeError, new float[dimension], maxNumberOfIterations);
 	}
 
-	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float maxAbsoluteError, float maxRelativeError, float[] steps, int maxNumberOfIterations) {
-		super(dimension, timeStep, targetTime, steps, maxNumberOfIterations);
+	public SimpleAdaptiveStepSimulation(Simulator<AdaptiveStepSimulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float maxAbsoluteError, float maxRelativeError, float[] steps, int maxNumberOfIterations) {
+		super(dimension, timeStep, targetTime, minBounds, maxBounds, steps, maxNumberOfIterations);
 		if (simulator == null) {
 			throw new IllegalArgumentException("The parameter [simulator] is NULL.");
 		}

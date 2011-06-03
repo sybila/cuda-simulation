@@ -7,20 +7,20 @@ public class SimpleSimulation extends AbstractSimulation implements Simulation
 
 	private Simulator<Simulation> simulator;
 
-	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime) {
-		this(simulator, dimension, timeStep, targetTime, new float[dimension], DEFAULT_MAX_NUMBER_OF_ITERATIONS);
+	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds) {
+		this(simulator, dimension, timeStep, targetTime, minBounds, maxBounds, new float[dimension], DEFAULT_MAX_NUMBER_OF_ITERATIONS);
 	}
 
-	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, float[] steps) {
-		this(simulator, dimension, timeStep, targetTime, steps, DEFAULT_MAX_NUMBER_OF_ITERATIONS);
+	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float[] steps) {
+		this(simulator, dimension, timeStep, targetTime, minBounds, maxBounds, steps, DEFAULT_MAX_NUMBER_OF_ITERATIONS);
 	}
 
-	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, int maxNumberOfIterations) {
-		this(simulator, dimension, timeStep, targetTime, new float[dimension], maxNumberOfIterations);
+	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, int maxNumberOfIterations) {
+		this(simulator, dimension, timeStep, targetTime, minBounds, maxBounds, new float[dimension], maxNumberOfIterations);
 	}
 
-	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, float[] steps, int maxNumberOfIterations) {
-		super(dimension, timeStep, targetTime, steps, maxNumberOfIterations);
+	public SimpleSimulation(Simulator<Simulation> simulator, int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float[] steps, int maxNumberOfIterations) {
+		super(dimension, timeStep, targetTime, minBounds, maxBounds, steps, maxNumberOfIterations);
 		if (simulator == null) {
 			throw new IllegalArgumentException("The parameter [simulator] is NULL.");
 		}

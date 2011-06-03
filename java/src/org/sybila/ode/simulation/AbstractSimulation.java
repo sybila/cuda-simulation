@@ -18,7 +18,11 @@ abstract public class AbstractSimulation implements Simulation
 
 	private List<Trajectory> trajectories;
 
-	public AbstractSimulation(int dimension, float timeStep, float targetTime, float[] steps, int maxNumberOfIterations) {
+	private float[] maxBounds;
+
+	private float[] minBounds;
+
+	public AbstractSimulation(int dimension, float timeStep, float targetTime, float[] minBounds, float[] maxBounds, float[] steps, int maxNumberOfIterations) {
 		if (dimension <= 0) {
 			throw new IllegalArgumentException("The dimension has to be a positive number.");
 		}
@@ -31,6 +35,18 @@ abstract public class AbstractSimulation implements Simulation
 		if (dimension != steps.length) {
 			throw new IllegalArgumentException("The size of array [steps] has to correspond to the dimension.");
 		}
+		if (minBounds == null) {
+			throw new IllegalArgumentException("The parameter [minBounds] is NULL.");
+		}
+		if (minBounds.length == dimension) {
+			throw new IllegalArgumentException("The size of array [minBounds] has to correspond to the dimension.");
+		}
+		if (maxBounds == null) {
+			throw new IllegalArgumentException("The parameter [maxBounds] is NULL.");
+		}
+		if (maxBounds.length == dimension) {
+			throw new IllegalArgumentException("The size of array [maxBounds] has to correspond to the dimension.");
+		}
 		for(int i=0; i<steps.length; i++) {
 			if (steps[i] < 0) {
 				throw new IllegalArgumentException("The steps has to be non-negative numbers.");
@@ -42,6 +58,8 @@ abstract public class AbstractSimulation implements Simulation
 		this.dimension = dimension;
 		this.targetTime	= targetTime;
 		this.timeStep = timeStep;
+		this.minBounds = minBounds;
+		this.maxBounds = maxBounds;
 		this.steps = steps;
 		this.maxNumberOfIterations = maxNumberOfIterations;
 	}
@@ -76,6 +94,14 @@ abstract public class AbstractSimulation implements Simulation
 
 	public int getMaxNumberOfIterations() {
 		return maxNumberOfIterations;
+	}
+
+	public float[] getMaxBounds() {
+		return maxBounds;
+	}
+
+	public float[] getMinBounds() {
+		return minBounds;
 	}
 
 }
