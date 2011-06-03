@@ -9,7 +9,16 @@ package org.sybila.ode.simulation;
 public enum SimulationStatus
 {
 
-	OK, TIMEOUT, PRECISION;
+	/** Simulation is being computed, end not yet reached end. */
+	COMPUTING,
+	/** Simulation reached defined minimum bound in some spatial dimension. */
+	BOUND_MINIMUM,
+	/** Simulation reached defined maximum bound in some spatial dimension. */
+	BOUND_MAXIMUM,
+	/** Simulation reached defined maximum time. */
+	BOUND_TIME,
+	/** Simulation could not be computed with specified precision. */
+	ERROR_PRECISION;
 
 	/**
 	 * It converts an integer to the simulation status
@@ -19,11 +28,15 @@ public enum SimulationStatus
 	public static SimulationStatus fromInt(int status) {
 		switch(status) {
 			case 0:
-				return OK;
+				return COMPUTING;
 			case 1:
-				return TIMEOUT;
+				return BOUND_MINIMUM;
 			case 2:
-				return PRECISION;
+				return BOUND_MAXIMUM;
+			case 3:
+				return BOUND_TIME;
+			case 4:
+				return ERROR_PRECISION;
 			default:
 				throw new IllegalStateException("There is no status corresponding to the number [" + status + "].");
 		}
