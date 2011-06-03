@@ -24,6 +24,6 @@ public interface Simulation
 
 	void setTrajectories(List<Trajectory> trajectories);
 
-	SimulationResult simulate();
+	SimulationResult simulate() throws SimulationException;
 
 }

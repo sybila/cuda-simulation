@@ -20,7 +20,7 @@ public interface Simulator<S extends Simulation>
 	 * It returns a set of trajectories genereted order to the given parameters.
 	 * @param simulation 
 	 */
-	SimulationResult simulate(S simulation);
+	SimulationResult simulate(S simulation) throws SimulationException;
 
 	void destroy();
 
