@@ -53,4 +53,35 @@ public class ArrayPoint implements Point {
 		}
 		return dataInArray;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		if (!(o instanceof Point)) {
+			return false;
+		}
+		final Point other = (ArrayPoint) o;
+		if (getDimension() != other.getDimension()) {
+			return false;
+		}
+		if (getTime() != other.getTime()) {
+			return false;
+		}
+		for(int i=0; i<dimension; i++) {
+			if (getValue(i) != other.getValue(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 29 * hash + Float.floatToIntBits(this.time);
+		return hash;
+	}
 }

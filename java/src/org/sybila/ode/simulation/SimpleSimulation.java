@@ -27,7 +27,7 @@ public class SimpleSimulation extends AbstractSimulation implements Simulation
 		this.simulator = simulator;
 	}
 
-	public SimulationResult simulate() {
+	public SimulationResult simulate() throws SimulationException {
 		return simulator.simulate(this);
 	}
 

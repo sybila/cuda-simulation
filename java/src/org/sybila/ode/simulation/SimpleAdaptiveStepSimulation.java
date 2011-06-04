@@ -47,7 +47,7 @@ public class SimpleAdaptiveStepSimulation extends AbstractSimulation implements 
 		return maxRelativeError;
 	}
 
-	public SimulationResult simulate() {
+	public SimulationResult simulate() throws SimulationException {
 		return simulator.simulate(this);
 	}
 
