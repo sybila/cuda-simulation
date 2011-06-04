@@ -1,5 +1,6 @@
-INFO
+CONTACT
 ================================================================================
+  * http://sybila.fi.muni.cz
   * https://github.com/sybila/cuda-simulation
 
 REQUIREMENT
@@ -10,8 +11,7 @@ REQUIREMENT
 
 USAGE
 ================================================================================
-  * from command line
-     * [make]		- compile CUDA C files
-     * [ant test] 	- execute simple tests
-     * [ant main] 	- execute simple benchmark
-     * [./benchmark]	- execute simple benchmark with increased size of heap
+
+1) Execute simple tests
+	
+	$ ant test
